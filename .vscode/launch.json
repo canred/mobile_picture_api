@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Server",
+      "name": "Mobile(API)",
       "program": "${workspaceFolder}/src/server.ts",
       "runtimeArgs": ["watch"],
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsx",
