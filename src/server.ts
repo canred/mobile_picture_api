@@ -1,11 +1,13 @@
 // Import the 'express' module
 import express from 'express';
-import routingPhoto from './Router/routing_photo';
+import routingPhoto from './Router/routing_photo.js';
 // Import Swagger modules
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 // Import CORS module
 import cors from 'cors';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 // Create an Express application
 const app = express();
@@ -13,8 +15,12 @@ const app = express();
 // Enable CORS
 app.use(cors());
 
+// Parse JSON requests
+app.use(express.json());
+
 // Set the port number for the server
-const port = 3000;
+const port = process.env.PORT || 3000;
+const server_ip = process.env.SERVER_IP;
 
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static('uploads'));
@@ -33,7 +39,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${port}`,
+        url: `http://${server_ip}:${port}`,
       },
     ],
   },
@@ -60,6 +66,7 @@ app.get('*', (req, res) => {
 // Start the server and listen on the specified port
 app.listen(port, () => {
   // Log a message when the server is successfully running
-  console.log(`Server is running on http://localhost:${port}`);
-  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
+  console.log(`Server is running on http://${server_ip}:${port}`);
+  console.log(`Swagger docs available at http://${server_ip}:${port}/api-docs`);
+  console.log('JSON request parser middleware is enabled');
 });

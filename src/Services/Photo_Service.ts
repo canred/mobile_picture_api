@@ -1,4 +1,4 @@
-import db from '../Db/database';
+import db from '../Db/database.js';
 import { Photo_Model } from '../Models/Photo_Model';
 
 // 插入資料

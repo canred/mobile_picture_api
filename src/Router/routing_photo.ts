@@ -1,6 +1,6 @@
 import express, { Response, Request, NextFunction } from 'express';
 import multer from 'multer';
-import * as service_photo from '../Services/Photo_Service';
+import * as service_photo from '../Services/Photo_Service.js';
 import { Photo_Model } from '../Models/Photo_Model';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
