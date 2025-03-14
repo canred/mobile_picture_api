@@ -1,6 +1,7 @@
 // Import the 'express' module
 import express from 'express';
 import routingPhoto from './Router/routing_photo.js';
+import routingUser from './Router/routing_user.js';
 // Import Swagger modules
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -17,6 +18,12 @@ app.use(cors());
 
 // Parse JSON requests
 app.use(express.json());
+
+// Middleware to set the authorization header globally
+app.use((req, res, next) => {
+  req.headers['authorization'] = req.headers['authorization'] || 'Bearer YOUR_DEFAULT_TOKEN';
+  next();
+});
 
 // Set the port number for the server
 const port = process.env.PORT || 3000;
@@ -42,6 +49,96 @@ const swaggerOptions = {
         url: `http://${server_ip}:${port}`,
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+      schemas: {
+        Token: {
+          type: 'object',
+          properties: {
+            access_token: {
+              type: 'string',
+              description: 'The bearer token',
+              example: 'eyJhb1cioiJIVCJ9.eyAixjMdNTY31D1wIioNSiW0jxTyT5TyCjIxOTI3MjJ9.kOkTVr4rPq5wiv2W1bB1UQ',
+            },
+            token_type: {
+              type: 'string',
+              example: 'Bearer',
+            },
+            expires_in: {
+              type: 'integer',
+              description: 'Token expiration time in seconds',
+              example: 3600,
+            },
+            refresh_token: {
+              type: 'string',
+              description: 'The refresh token',
+              example: 'eyJhba5c1IaIkXV9.ezdfIiOqNSaiaWF0IjoxNTYyMTg5MOjE1NjU5MsdDMsw.lFlaJqxPP4rX-c3sWACvvO',
+            },
+          },
+        },
+      },
+      responses: {
+        InvalidApiRequest: {
+          description: 'Invalid Request',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    example: 'Missing Authorization Token',
+                  },
+                },
+              },
+            },
+          },
+        },
+        Unauthorized: {
+          description: 'Unauthorized',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    example: 'Expired token. Use the refresh token to get a new one',
+                  },
+                },
+              },
+            },
+          },
+        },
+        Forbidden: {
+          description: 'Forbidden',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    example: 'You are no longer an active user here',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ['./src/Router/*.ts'], // Path to the API docs
 };
@@ -57,6 +154,9 @@ app.get('/', (req, res) => {
 
 // Use the routing file for photo-related routes
 app.use('/api/photo', routingPhoto);
+
+// Use the routing file for user-related routes
+app.use('/api/user', routingUser);
 
 // Catch-all route to handle Angular routing
 app.get('*', (req, res) => {
