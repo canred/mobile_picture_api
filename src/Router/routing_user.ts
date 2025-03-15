@@ -3,7 +3,7 @@ import Datastore from 'nedb';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { User } from '../Models/User'; // 新增這行
+import { User_Model } from '../Models/User_Model'; // 新增這行
 dotenv.config();
 
 const router = express.Router();
@@ -50,7 +50,7 @@ router.post('/register', (req: Request, res: Response) => {
     const { username, password, email } = req.body;
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) return res.status(500).send(err);
-        const newUser: User = {
+        const newUser: User_Model = {
             username: username,
             password: hash,
             email: email || '',
