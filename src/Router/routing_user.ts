@@ -7,7 +7,7 @@ import { User_Model } from '../Models/User_Model'; // 新增這行
 dotenv.config();
 
 const router = express.Router();
-const db = new Datastore({  filename: 'dbStorage/users.db', autoload: true });
+const db = new Datastore({ filename: 'dbStorage/users.db', autoload: true });
 const secretKey = process.env.JWT_SECRET_KEY || 'your_secret_key';
 
 /**
@@ -104,7 +104,7 @@ router.post('/login', (req: Request, res: Response) => {
         bcrypt.compare(password, user.password, (err, result) => {
             if (err) return res.status(500).send(err);
             if (!result) return res.status(401).send('Invalid password');
-            const token = jwt.sign({ id: user._id , username : user.username }, secretKey, { expiresIn: '3m' });
+            const token = jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '3m' });
             res.status(200).send({ token });
         });
     });
@@ -144,20 +144,20 @@ router.post('/login', (req: Request, res: Response) => {
  */
 router.put('/edit', (req: Request, res: Response) => {
     const token = req.headers['authorization'];
-    if (!token) { 
-        res.status(401).send('No token provided'); 
+    if (!token) {
+        res.status(401).send('No token provided');
     }
     jwt.verify(token!, secretKey, (err, decoded) => {
         if (err) return res.status(500).send('Failed to authenticate token 2');
         if (typeof decoded === 'string' || !decoded) return res.status(500).send('Invalid token');
-        const { username, password,email } = req.body;
+        const { username, password, email } = req.body;
         // 取得登入者的部分資訊
         const userId = (decoded as JwtPayload).id;
         console.log("username: ", username);
         console.log("password: ", password);
         bcrypt.hash(password, 10, (err, hash) => {
             if (err) return res.status(500).send(err);
-            db.update({ _id: (decoded as JwtPayload).id }, { $set: { username, password: hash , email, } }, {}, (err, numReplaced) => {
+            db.update({ _id: (decoded as JwtPayload).id }, { $set: { username, password: hash, email, } }, {}, (err, numReplaced) => {
                 if (err) return res.status(500).send(err);
                 res.status(200).send('User updated2');
             });
@@ -165,4 +165,39 @@ router.put('/edit', (req: Request, res: Response) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/user/keyword/{keyword}:
+ *   get:
+ *     summary: 根據關鍵字搜尋用戶
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: 用戶名關鍵字
+ *     responses:
+ *       200:
+ *         description: 搜尋結果
+ *       500:
+ *         description: 伺服器錯誤
+ */
+
+router.get('/keyword/:keyword?', (req: Request, res: Response) => {
+    let keyword = req.params.keyword || '';
+    if (keyword == '{keyword}') {
+        keyword = '';
+    }
+    
+    db.find({ username: new RegExp(keyword, 'i') }, (err: any, users: any) => {
+        users.forEach((user: any) => {
+            delete user.password;
+        });
+        res.json(users);
+    });
+});
+
+//http://localhost:3001/api/user/keyword/
 export default router;

@@ -147,16 +147,19 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Define a route for the root path ('/')
-app.get('/', (req, res) => {
-  // Send the Angular project's index.html file
-  res.sendFile('index.html', { root: 'dist/browser' });
-});
+
 
 // Use the routing file for photo-related routes
 app.use('/api/photo', routingPhoto);
 
 // Use the routing file for user-related routes
 app.use('/api/user', routingUser);
+
+
+app.get('/', (req, res) => {
+  // Send the Angular project's index.html file
+  res.sendFile('index.html', { root: 'dist/browser' });
+});
 
 // Catch-all route to handle Angular routing
 app.get('*', (req, res) => {
