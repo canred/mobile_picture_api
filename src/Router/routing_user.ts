@@ -126,11 +126,12 @@ router.post('/login', (req: Request, res: Response) => {
  *             type: object
  *             required:
  *               - username
- *               - password
+ *               - email
+ *               - _id
  *             properties:
- *               username:
+ *               _id:
  *                 type: string
- *               password:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -143,26 +144,41 @@ router.post('/login', (req: Request, res: Response) => {
  *         description: 伺服器錯誤
  */
 router.put('/edit', (req: Request, res: Response) => {
-    const token = req.headers['authorization'];
-    if (!token) {
-        res.status(401).send('No token provided');
-    }
-    jwt.verify(token!, secretKey, (err, decoded) => {
-        if (err) return res.status(500).send('Failed to authenticate token 2');
-        if (typeof decoded === 'string' || !decoded) return res.status(500).send('Invalid token');
-        const { username, password, email } = req.body;
-        // 取得登入者的部分資訊
-        const userId = (decoded as JwtPayload).id;
-        console.log("username: ", username);
-        console.log("password: ", password);
-        bcrypt.hash(password, 10, (err, hash) => {
-            if (err) return res.status(500).send(err);
-            db.update({ _id: (decoded as JwtPayload).id }, { $set: { username, password: hash, email, } }, {}, (err, numReplaced) => {
-                if (err) return res.status(500).send(err);
-                res.status(200).send('User updated2');
+    // const token = req.headers['authorization'];
+    // if (!token) {
+    //     res.status(401).send('No token provided');
+    // }
+    // jwt.verify(token!, secretKey, (err, decoded) => {
+    //     if (err) return res.status(500).send('Failed to authenticate token 2');
+    //     if (typeof decoded === 'string' || !decoded) return res.status(500).send('Invalid token');
+    const { username, email, _id } = req.body;
+
+    // username: string;
+    // password: string;
+    // email?: string;
+    // createdAt: Date;
+    // updatedAt: Date;
+
+    // 取得登入者的部分資訊
+    // const userId = (decoded as JwtPayload).id;
+    db.findOne(({ _id }), (err, user) => {
+        if (err) return res.status(500).send("User not found");
+        if (user) {
+            db.update({ _id }, { $set: { username, email, updatedAt: new Date() } }, {}, (err, numReplaced) => {
+                res.json({ status:"ok", message: 'update success' });
             });
-        });
+        } else {
+            res.status(404).send('User not found');
+        }
     });
+    // bcrypt.hash(password, 10, (err, hash) => {
+    //     if (err) return res.status(500).send(err);
+    //     // db.update({ _id: (decoded as JwtPayload).id }, { $set: { username, password: hash, email, } }, {}, (err, numReplaced) => {
+    //     //     if (err) return res.status(500).send(err);
+    //     //     res.status(200).send('User updated2');
+    //     // });
+    // });
+    // });
 });
 
 /**
@@ -190,7 +206,7 @@ router.get('/keyword/:keyword?', (req: Request, res: Response) => {
     if (keyword == '{keyword}') {
         keyword = '';
     }
-    
+
     db.find({ username: new RegExp(keyword, 'i') }, (err: any, users: any) => {
         users.forEach((user: any) => {
             delete user.password;
@@ -227,7 +243,7 @@ router.get('/:_id', (req: Request, res: Response) => {
         if (!user) return res.status(404).send('User not found');
         delete user.password;
         res.json(user);
-    });    
+    });
 });
 
 //http://localhost:3001/api/user/UC5quDst4zgZLwBf
