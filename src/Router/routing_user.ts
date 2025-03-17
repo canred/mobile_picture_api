@@ -199,5 +199,38 @@ router.get('/keyword/:keyword?', (req: Request, res: Response) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/user/{_id}:
+ *   get:
+ *     summary: 根據用戶ID獲取用戶信息
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 用戶ID
+ *     responses:
+ *       200:
+ *         description: 用戶信息
+ *       404:
+ *         description: 用戶不存在
+ *       500:
+ *         description: 伺服器錯誤
+ */
+router.get('/:_id', (req: Request, res: Response) => {
+    let _id = req.params._id || '';
+    db.findOne({ _id }, (err: any, user: any) => {
+        if (err) return res.status(500).send(err);
+        if (!user) return res.status(404).send('User not found');
+        delete user.password;
+        res.json(user);
+    });    
+});
+
+//http://localhost:3001/api/user/UC5quDst4zgZLwBf
+
 //http://localhost:3001/api/user/keyword/
 export default router;
