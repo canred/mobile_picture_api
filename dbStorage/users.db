@@ -13,3 +13,5 @@
 {"username":"canred3","password":"$2b$10$1FbRLJTcm6BdVIVSbD79h.6YdikKgKOcdw9nNJxLLtEA6n5kS.wam","email":"canred.chen3@gmail.com","_id":"lgQQodTK2A7jpmZd","updatedAt":{"$$date":1742230276493}}
 {"username":"admin","password":"$2b$10$2npZNp1b/TuGATDZGkIEAOW.YUaJo8K4QNb1Ot9Cr/WuN61lad0Ry","email":"canred.chen@gmail.com","createdAt":{"$$date":1742092863446},"updatedAt":{"$$date":1742230323644},"_id":"UC5quDst4zgZLwBf"}
 {"username":"ditto","password":"$2b$10$sm/KLRFMfYyPPltl7ERTWOKBbttlclgeAOvc9A8mQzmHptUuhNVQ.","email":"canred.chen@gmail.com","createdAt":{"$$date":1742233068210},"updatedAt":{"$$date":1742233068210},"_id":"jFQJwBEDUkmgoqkw"}
+{"username":"canred1","password":"$2b$10$Miiz5mrT8sMHJZbmYg.LCOR.Q5Hw6lLq.UmzD2sFJnuPYfCVKA8bK","email":"canred.chen1@gmail.com","createdAt":{"$$date":1741975715782},"updatedAt":{"$$date":1742234057790},"_id":"ZmpXL8r9xZzdCqlY"}
+{"username":"canred1","password":"$2b$10$Miiz5mrT8sMHJZbmYg.LCOR.Q5Hw6lLq.UmzD2sFJnuPYfCVKA8bK","email":"canred.chen1@gmail.com","createdAt":{"$$date":1741975715782},"updatedAt":{"$$date":1742234062862},"_id":"ZmpXL8r9xZzdCqlY"}
