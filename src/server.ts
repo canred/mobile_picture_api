@@ -2,6 +2,7 @@
 import express from 'express';
 import routingPhoto from './Router/routing_photo.js';
 import routingUser from './Router/routing_user.js';
+import routingAlbum from './Router/routing_album.js';
 // Import Swagger modules
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -154,6 +155,9 @@ app.use('/api/photo', routingPhoto);
 
 // Use the routing file for user-related routes
 app.use('/api/user', routingUser);
+
+// Use the routing file for user-related routes
+app.use('/api/album', routingAlbum);
 
 
 app.get('/', (req, res) => {
