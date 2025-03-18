@@ -1,9 +1,10 @@
-export interface User_Model {
+export interface Album_Model {
     photo_name: string;
     photo_desc?: string;
     email?: string;
     _id?: string;
     photo_order: number;
     photo_updateAt?: Date;
+    defalut_photo_url?: string;
 }
 
