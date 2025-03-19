@@ -3,3 +3,6 @@
 {"username":"canred4","password":"$2b$10$sm/KLRFMfYyPPltl7ERTWOKBbttlclgeAOvc9A8mQzmHptUuhNVQ.","email":"canred.chen@gmail.com","createdAt":{"$$date":1742233068210},"updatedAt":{"$$date":1742301806849},"_id":"jFQJwBEDUkmgoqkw"}
 {"username":"canred2","password":"$2b$10$1FbRLJTcm6BdVIVSbD79h.6YdikKgKOcdw9nNJxLLtEA6n5kS.wam","email":"canred.chen2@gmail.com","_id":"lgQQodTK2A7jpmZ4","updatedAt":{"$$date":1742230262496}}
 {"username":"canred3","password":"$2b$10$1FbRLJTcm6BdVIVSbD79h.6YdikKgKOcdw9nNJxLLtEA6n5kS.wam","email":"canred.chen3@gmail.com","_id":"lgQQodTK2A7jpmZd","updatedAt":{"$$date":1742230276493}}
+{"username":"admin","password":"$2b$10$2npZNp1b/TuGATDZGkIEAOW.YUaJo8K4QNb1Ot9Cr/WuN61lad0Ry","email":"canred.chen@gmail.com","createdAt":{"$$date":1742092863446},"updatedAt":{"$$date":1742402683880},"_id":"UC5quDst4zgZLwBf"}
+{"username":"admin","password":"$2b$10$2npZNp1b/TuGATDZGkIEAOW.YUaJo8K4QNb1Ot9Cr/WuN61lad0Ry","email":"canred.chen@gmail.com","createdAt":{"$$date":1742092863446},"updatedAt":{"$$date":1742402688773},"_id":"UC5quDst4zgZLwBf"}
+{"username":"admin","password":"$2b$10$2npZNp1b/TuGATDZGkIEAOW.YUaJo8K4QNb1Ot9Cr/WuN61lad0Ry","email":"canred.chen@gmail.com","createdAt":{"$$date":1742092863446},"updatedAt":{"$$date":1742402831720},"_id":"UC5quDst4zgZLwBf"}
