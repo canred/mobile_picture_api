@@ -1,5 +1,6 @@
 // Import the 'express' module
 import express from 'express';
+
 import routingPhoto from './Router/routing_photo.js';
 import routingUser from './Router/routing_user.js';
 import routingAlbum from './Router/routing_album.js';
@@ -10,10 +11,14 @@ import swaggerJsdoc from 'swagger-jsdoc';
 // Import CORS module
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import { ngExpressEngine } from '@nguniversal/express-engine';
+import { provideClientHydration } from '@angular/platform-browser';
 dotenv.config();
 
 // Create an Express application
 const app = express();
+
+
 
 // Enable CORS
 app.use(cors());
