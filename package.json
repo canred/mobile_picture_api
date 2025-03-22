@@ -20,8 +20,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@angular/platform-browser": "^19.2.3",
-    "@angular/platform-server": "^19.2.3",
     "@nguniversal/express-engine": "^16.2.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",

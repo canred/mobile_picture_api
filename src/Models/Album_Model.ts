@@ -6,5 +6,7 @@ export interface Album_Model {
     photo_order: number;
     photo_updateAt?: Date;
     defalut_photo_url?: string;
+    album_file_path?: string;
+    album_file_url?: string;
 }
 

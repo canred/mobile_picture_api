@@ -3,12 +3,18 @@ import Datastore from 'nedb';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
+import multer from 'multer'; // 新增這行
 import { Album_Model } from '../Models/Album_Model'; // 新增這行
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 const router = express.Router();
 const db = new Datastore({ filename: 'dbStorage/album.db', autoload: true });
 const secretKey = process.env.JWT_SECRET_KEY || 'your_secret_key';
+const upload = multer({ dest: 'uploads/' }); // 新增這行
 
 /**
  * @swagger
@@ -26,7 +32,7 @@ const secretKey = process.env.JWT_SECRET_KEY || 'your_secret_key';
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:  
  *           schema:
  *             type: object
  *             required:
@@ -45,6 +51,9 @@ const secretKey = process.env.JWT_SECRET_KEY || 'your_secret_key';
  *                 type: number
  *               defalut_photo_url:
  *                 type: string
+ *               file:  
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: 相片信息更新成功
@@ -53,20 +62,57 @@ const secretKey = process.env.JWT_SECRET_KEY || 'your_secret_key';
  *       500:
  *         description: 伺服器錯誤
  */
-router.put('/edit', (req: Request, res: Response) => {
-    const { photo_name, photo_desc, photo_order, _id,defalut_photo_url } = req.body;
+router.put('/edit', upload.single('file'), (req: Request, res: Response) => {
+    const { photo_name, photo_desc, photo_order, _id, defalut_photo_url } = req.body;
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    if (req.file) {
+        const targetPath = path.join(__dirname, '../../uploads/album/', _id.toString() + path.extname(req.file.originalname));
 
-    db.findOne(({ _id }), (err, album) => {
-        if (err) return res.status(500).send("Album not found");
-        if (album) {
-            db.update({ _id }, { $set: { photo_name, photo_desc, photo_order,defalut_photo_url, photo_updateAt: new Date() } }, {}, (err, numReplaced) => {
-                res.json({ status: "ok", message: 'update success' });
+        fs.rename(req.file.path, targetPath, (err: any) => {
+            if (err) return res.status(500).send(err.message);
+            // Update the database with the new file path
+            db.findOne(({ _id }), (err, album) => {
+                if (err) return res.status(500).send("Album not found");
+                if (album) {
+                    const updateData: any = { 
+                        photo_name, 
+                        photo_desc, 
+                        photo_order, 
+                        defalut_photo_url, 
+                        photo_updateAt: new Date(),
+                        album_file_path: targetPath, // Update file path
+                        album_file_url: './uploads/album/' + targetPath.split('/').pop() 
+                    };
+
+                    db.update({ _id }, { $set: updateData }, {}, (err, numReplaced) => {
+                        res.json({ status: "ok", message: 'update success' });
+                    });
+                } else {
+                    res.status(404).send('Album not found');
+                }
             });
-        } else {
-            res.status(404).send('Album not found');
-        }
-    });
-
+        });
+    } else {
+        db.findOne(({ _id }), (err, album) => {
+            if (err) return res.status(500).send("Album not found");
+            if (album) {
+                album.photo_name = photo_name;
+                album.photo_desc = photo_desc;
+                album.photo_order = photo_order;
+                album.defalut_photo_url = defalut_photo_url;
+                album.photo_updateAt = new Date();
+                album.album_file_path = album.album_file_path;
+                album.album_file_url = album.album_file_url;    
+                
+                db.update({ _id }, { $set: album }, {}, (err, numReplaced) => {
+                    res.json({ status: "ok", message: 'update success' });
+                });
+            } else {
+                res.status(404).send('Album not found');
+            }
+        });
+    }
 });
 
 /**
